@@ -1,0 +1,66 @@
+<?php
+defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
+/** @var object $router **/
+
+// API controllers apply the configured LavaLust CORS policy in before_action().
+
+// ---- infra ----
+$router->get('/',                              'AuthController::index');
+$router->get('/api/v1/health',                 'AuthController::health');
+
+// ---- auth ----
+$router->post('/api/v1/auth/register',         'AuthController::register');
+$router->post('/api/v1/auth/login',            'AuthController::login');
+$router->post('/api/v1/auth/verify-email',     'AuthController::verify_email');
+$router->post('/api/v1/auth/resend-verification', 'AuthController::resend_verification');
+$router->post('/api/v1/auth/refresh',          'AuthController::refresh');
+$router->post('/api/v1/auth/logout',           'AuthController::logout');
+$router->get ('/api/v1/auth/me',               'AuthController::me');
+$router->patch('/api/v1/profile',              'AuthController::profile_update');
+
+// ---- catalog ----
+$router->get ('/api/v1/courses',               'LearningController::courses');
+$router->get ('/api/v1/lessons/{id}',          'LearningController::lesson');
+
+// ---- assessment + path ----
+$router->get ('/api/v1/assessments/placement',        'LearningController::placement');
+$router->post('/api/v1/assessments/placement/submit', 'LearningController::placement_submit');
+$router->get ('/api/v1/learning-path',                'LearningController::path');
+$router->post('/api/v1/learning-path/generate',       'LearningController::path_generate');
+$router->post('/api/v1/learning-path/progress',       'LearningController::path_progress');
+
+// ---- playground ----
+$router->get ('/api/v1/exercises',             'LabController::exercises');
+$router->post('/api/v1/playground/run',        'LabController::run');
+
+// ---- submissions + peer review ----
+$router->get ('/api/v1/submissions',           'LabController::submissions');
+$router->post('/api/v1/submissions',           'LabController::submit_assignment');
+$router->get ('/api/v1/peer-review/queue',     'LabController::review_queue');
+$router->post('/api/v1/peer-review/submit',    'LabController::review_submit');
+$router->get ('/api/v1/peer-review/feedback',  'LabController::review_feedback');
+
+// ---- analytics ----
+$router->get ('/api/v1/analytics/student',     'MetaController::analytics_student');
+$router->get ('/api/v1/analytics/instructor',  'MetaController::analytics_instructor');
+$router->get ('/api/v1/analytics/leaderboard', 'MetaController::leaderboard');
+
+// ---- credentials ----
+$router->get ('/api/v1/badges',                'MetaController::badges');
+$router->get ('/api/v1/certificates',          'MetaController::certificates');
+$router->get ('/api/v1/verify/{code}',         'MetaController::verify');
+
+// ---- sessions / notifications ----
+$router->get ('/api/v1/sessions',              'MetaController::sessions');
+$router->post('/api/v1/sessions',              'MetaController::session_create');
+$router->get ('/api/v1/notifications',         'MetaController::notifications');
+$router->patch('/api/v1/notifications',        'MetaController::notifications_read');
+
+// ---- commerce / storage ----
+$router->post('/api/v1/payments/checkout',     'MetaController::checkout');
+$router->post('/api/v1/payments/webhook',      'MetaController::webhook');
+$router->post('/api/v1/uploads/presign',       'MetaController::presign');
+
+// ---- admin ----
+$router->get ('/api/v1/admin/users',           'MetaController::admin_users');
+$router->patch('/api/v1/admin/users',          'MetaController::admin_user_update');
